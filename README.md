@@ -24,11 +24,15 @@ The frontend is served at <http://localhost:8081>, the API at
 
 ## Screenshots
 
-![Login page](docs/screenshots/login.png)
+![Sign-in page with password and SSO options](docs/screenshots/login.png)
 
-![Users list](docs/screenshots/users.png)
+![Sign-in with a rejected password](docs/screenshots/login-error.png)
 
-_These images are illustrative mockups rendered from this repository's documented screens and API shapes, not captures of a running build. Regenerate or replace them with real captures once the app is running._
+![Dashboard after signing in](docs/screenshots/dashboard.png)
+
+![Users list as an admin](docs/screenshots/users.png)
+
+_Real captures from a local run (Spring Boot jar, Angular dev server, PostgreSQL), driven with Playwright. Keycloak was not running, so the SSO button is shown but not exercised, and one account was promoted to `ROLE_ADMIN` directly in the database to reach the Users page._
 
 ## What is included
 
