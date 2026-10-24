@@ -22,6 +22,18 @@ The frontend is served at <http://localhost:8081>, the API at
 <http://localhost:8080> (Swagger UI at `/swagger-ui.html`), Keycloak at
 <http://localhost:8180>.
 
+## Screenshots
+
+![Sign-in page with password and SSO options](docs/screenshots/login.png)
+
+![Sign-in with a rejected password](docs/screenshots/login-error.png)
+
+![Dashboard after signing in](docs/screenshots/dashboard.png)
+
+![Users list as an admin](docs/screenshots/users.png)
+
+_Real captures from a local run (Spring Boot jar, Angular dev server, PostgreSQL), driven with Playwright. Keycloak was not running, so the SSO button is shown but not exercised, and one account was promoted to `ROLE_ADMIN` directly in the database to reach the Users page._
+
 ## What is included
 
 ### Backend (`backend/`, Spring Boot 4, Java 21)
