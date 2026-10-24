@@ -22,6 +22,14 @@ The frontend is served at <http://localhost:8081>, the API at
 <http://localhost:8080> (Swagger UI at `/swagger-ui.html`), Keycloak at
 <http://localhost:8180>.
 
+## Screenshots
+
+![Login page](docs/screenshots/login.png)
+
+![Users list](docs/screenshots/users.png)
+
+_These images are illustrative mockups rendered from this repository's documented screens and API shapes, not captures of a running build. Regenerate or replace them with real captures once the app is running._
+
 ## What is included
 
 ### Backend (`backend/`, Spring Boot 4, Java 21)
