@@ -1,6 +1,6 @@
 # Dependabot status
 
-_Last updated: 2026-10-11. Starter template extracted from `enterprise-app`; update when the state changes._
+_Last updated: 2026-10-27. Starter template extracted from `enterprise-app`; update when the state changes._
 
 ## Configuration
 
@@ -17,10 +17,12 @@ _Last updated: 2026-10-11. Starter template extracted from `enterprise-app`; upd
 - Set by the repo owner through the API on 2026-10-10 (the session's proxy blocks repository-settings writes) and read back by the session the same day: private vulnerability reporting enabled (PUT 204), `delete_branch_on_merge` on (PATCH 200), repository topics set (PUT 200). Fork-PR workflow approval is `all_external_contributors` (read with the owner's token). Stale branches left over from squash-merged PRs were deleted after a fresh diff against `main` showed their content already on `main`.
 - Alerts read 2026-10-10 with the repo owner's token: Code scanning #1 `java/spring-disabled-csrf-protection` (`SecurityConfig.java:89`, the API filter chain) is a false positive, as enterprise-app's #2 is: the chain is stateless and only trusts the `Authorization` header (`JwtAuthenticationFilter`; no cookie is read anywhere in the backend), which a browser never attaches to a cross-site request. The OIDC chain keeps Spring's CSRF protection on. Dismissed as `false positive` with a comment by the repo owner on 2026-10-10 (PATCH 200). No Dependabot or secret-scanning alerts. The read-back after the dismissals showed 0 open Dependabot and 0 open code-scanning alerts.
 - Rescan 2026-10-11 repeated every dimension (open PRs, branches, CI on `main`, required contexts against the last merged PR's check runs, protection, `security_and_analysis`, private vulnerability reporting, dependency graph, `is_template`, description, topics, licence placeholders) and added one: whether the GitHub description actually describes this repo. Live result: no open PRs, `main` the only branch, CI on `main` green, every required context produced green by the last merged PR, protection unchanged, secret scanning, push protection and Dependabot security updates enabled, private vulnerability reporting on, SBOM 200, `is_template` true, description accurate, topics set, `LICENSE` filled in (2026, arb-rajab). The repo owner's token read 0 open Dependabot, code-scanning and secret-scanning alerts and fork-PR approval `all_external_contributors`. No new gaps.
+- Rescan 2026-10-27 (a new loop after a gap in which Dependabot opened a fresh batch of PRs). Merged (squash) after reading each PR's check runs: #5, #7, #8, #24. Merged from this session: #27 (codeql-action init and analyze bumped together to 4.39.1). Closed unmerged, each with a comment where the session closed it: #25 (init bumped alone fails CodeQL with a configuration error; replaced by #27); #26 (analyze bumped alone fails CodeQL with a configuration error; replaced by #27). The `braces` exemption (GHSA-vfj7-8cjw-p6xm) was removed from `osv-scanner.toml`: osv-scanner reports it as an unused ignore, because braces 3.0.3 is no longer affected, so the entry no longer masked anything. Live result when this entry was written: main CI green, branch protection and required contexts unchanged and each context produced by the last merged PR's check runs, private vulnerability reporting on, dependency graph on (SBOM 200). Dependabot, code-scanning and secret-scanning alerts and the repository security settings are read with the owner's token, not by the session; their state is recorded after the owner's next read.
 
 ## Time-limited exemptions
 
 - `osv-scanner.toml`, every entry expiring 2026-11-09 (earlier than the source repos' 2026-11-15): `braces` GHSA-vfj7-8cjw-p6xm (dev tooling, never shipped). After that date the scan fails until each entry is renewed or removed. The scan is not a required check, so merges still work, but re-check each advisory for a fix before then.
+- 2026-10-27: the `braces` GHSA-vfj7-8cjw-p6xm entry described above was removed (osv-scanner flags it as an unused ignore); nothing else here changed.
 
 ## Notes
 
@@ -29,9 +31,11 @@ _Last updated: 2026-10-11. Starter template extracted from `enterprise-app`; upd
 - Required contexts: `Backend (build, test, lint)`, `Frontend (lint, test, build)`, `Docker image builds`, `Secret scanning (gitleaks)`. Nothing else is required on purpose: osv-scanner, npm audit, dependency review and CodeQL depend on a moving advisory database or run only on some events.
 - `Dependency review (PR diff)` failed on #1 because the dependency graph was still off at the time. Since the graph was turned on it passed on #2 (2026-10-10), so the job works. It is not required, so it never blocked a merge.
 - Rescan 2026-10-10: the README called `LICENSE` a placeholder and `osv-scanner.toml` empty; both were out of date (the licence names arb-rajab, and the file carries the dated `braces` exception). Reworded.
+- `github/codeql-action/init` and `/analyze` must be bumped in the same PR. Dependabot opens one PR for each, and either alone fails every CodeQL job with a configuration error, so combine them by hand.
 
 ## Deferred (not re-raised each pass)
 
 - Alert reads (Dependabot, code scanning, secret scanning) and Actions settings (fork-PR approval) are blocked for Claude sessions by the proxy; they are read and written with the repo owner's token on their own machine.
 - The owner keeps the token's Administration, Contents and Secret scanning permissions and does not rotate it (deliberate, 2026-10-09, reconfirmed 2026-10-10 for the template repos).
 - Re-check the exemptions above before 2026-11-09 and drop each once its upstream fix ships.
+- Dependabot commands (`@dependabot rebase`, `@dependabot recreate`) written by a Claude session are neutralised when the comment is posted (the mention is mangled, so Dependabot never sees it). Rebases and recreates of conflicted or stale PRs go through the owner's token; the session can only refresh a branch with the update-branch call or replace the PR with its own.
